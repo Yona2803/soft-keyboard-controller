@@ -1,3 +1,1 @@
-import SoftKeyboardController from './SoftKeyboardController.js';
-
-export default SoftKeyboardController;
+export { default, default as SoftKeyboardController } from "./SoftKeyboardController.js";

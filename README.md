@@ -1,6 +1,6 @@
 # Soft Keyboard Controller
 
-A lightweight, dependency-free JavaScript library that gives you control over when the browser's **soft (soft) keyboard** is allowed to appear.
+A lightweight, dependency-free JavaScript library that gives you control over when the browser's **soft (virtual) keyboard** is allowed to appear.
 
 Designed especially for:
 
@@ -55,8 +55,34 @@ pnpm add soft-keyboard-controller
 
 ---
 
+## Node.js Support
+
+### Using the package
+
+The published package is built before being published to npm.
+
+* **Node.js >= 14** is supported for consuming the package.
+
+### Building from source
+
+If you clone the repository and build it yourself, the development toolchain has additional requirements:
+
+* **Node.js >= 22** is required to run `npm run build` (Rollup 4.x and related tooling).
+
+This requirement only applies to contributors building the project from source and does not affect users installing the published package from npm.
+
+---
+
 ## Basic Usage
 
+ESM (recommended)
+```javascript
+import { SoftKeyboardController } from "soft-keyboard-controller";
+
+const keyboard = new SoftKeyboardController();
+```
+
+Default import (also supported)
 ```javascript
 import SoftKeyboardController from "soft-keyboard-controller";
 
@@ -122,7 +148,7 @@ const keyboard = new SoftKeyboardController({
 | inputModeEnabled  | string            | `"text"`     | inputmode applied when enabled            |
 | inputModeDisabled | string            | `"none"`     | inputmode applied when disabled           |
 | preserveInputMode | boolean           | true         | Restore each element's original inputmode |
-| ignore            | string | function | null         | Ignore elements                           |
+| ignore            | string / function | null         | Ignore elements                           |
 
 ---
 
@@ -318,12 +344,22 @@ keyboard.refresh();
 ```
 
 ---
+# CommonJS Example
+
+```javascript
+const { SoftKeyboardController } = require("soft-keyboard-controller");
+
+const keyboard = new SoftKeyboardController();
+```
+
+---
+
 
 # React Example
 
 ```javascript
 import { useEffect } from "react";
-import SoftKeyboardController from "soft-keyboard-controller";
+import { SoftKeyboardController } from "soft-keyboard-controller";
 
 export default function App() {
 
@@ -348,7 +384,7 @@ export default function App() {
 # Vue Example
 
 ```javascript
-import SoftKeyboardController
+import { SoftKeyboardController }
 from "soft-keyboard-controller";
 
 const keyboard =

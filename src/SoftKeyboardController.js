@@ -115,19 +115,19 @@ constructor(options = {}) {
     if (this._destroyed) return;
     this._destroyed = true;
 
-    // Remove activation listeners
+    // Remove activation listeners.
     if (this._activation === 'dblclick' || this._activation === 'click') {
       document.removeEventListener(this._activation, this._onActivationHandler, true);
     } else if (this._activation === 'doubletap') {
       document.removeEventListener('click', this._onDoubleTapHandler, true);
     }
 
-    // Remove focusout if used
+    // Remove focusout if used.
     if (this._deactivateOnBlur) {
       document.removeEventListener('focusout', this._onFocusOutHandler, true);
     }
 
-    // Clear the WeakMap (optional – will be GC'd)
+    // Clear the WeakMap.
     this._originalInputModes = null;
   }
 
@@ -138,8 +138,7 @@ constructor(options = {}) {
     const elements = this._getTargetElements();
 
     for (const el of elements) {
-      // Capture each element's original inputmode exactly once, before
-      // the library ever modifies it.
+      // Capture each element's original inputmode exactly once, before the library ever modifies it.
       if (this._preserveInputMode && !this._originalInputModes.has(el)) {
         const original = el.getAttribute('inputmode') || '';
         this._originalInputModes.set(el, original);
