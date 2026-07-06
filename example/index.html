@@ -1,17 +1,196 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Soft Keyboard Controller — Live Demo</title>
+
+<!-- Pico CSS (classless-friendly, no build step needed) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+<link rel="stylesheet" href="./style.css">
 </head>
-
 <body>
-    <input type="text" placeholder="Text">
-    <input type="search" placeholder="Search">
+<main class="container">
 
-    <script type="module" src="script.js"></script>
+  <header>
+    <hgroup>
+      <h1>⌨️ Soft Keyboard Controller</h1>
+      <p>Interactive playground for every option and method in the README.</p>
+    </hgroup>
+    <p>
+      <span id="status-pill" class="pill pill-off">keyboard: disabled</span>
+      <span id="activation-pill" class="pill pill-neutral">activation: dblclick</span>
+    </p>
+  </header>
+
+  <!-- ───────────────────────── Configuration ───────────────────────── -->
+  <section>
+    <h2>1. Configuration</h2>
+    <p>Change any option below, then click <strong>Apply &amp; Reinitialize</strong> to rebuild the controller with a fresh <code>new SoftKeyboardController(options)</code> call — exactly like the README's "Configuration" example.</p>
+
+    <div class="grid">
+      <label>selector
+        <input type="text" id="opt-selector" value='input[type="text"], input[type="search"], textarea'>
+      </label>
+
+      <label>activation
+        <select id="opt-activation">
+          <option value="dblclick" selected>dblclick</option>
+          <option value="doubletap">doubletap</option>
+          <option value="click">click</option>
+          <option value="manual">manual</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="grid">
+      <label>defaultEnabled
+        <select id="opt-defaultEnabled">
+          <option value="false" selected>false</option>
+          <option value="true">true</option>
+        </select>
+      </label>
+
+      <label>deactivateOnBlur
+        <select id="opt-deactivateOnBlur">
+          <option value="true" selected>true</option>
+          <option value="false">false</option>
+        </select>
+      </label>
+
+      <label>preserveInputMode
+        <select id="opt-preserveInputMode">
+          <option value="true" selected>true</option>
+          <option value="false">false</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="grid">
+      <label>blurDelay (ms)
+        <input type="number" id="opt-blurDelay" value="10" min="0">
+      </label>
+
+      <label>doubleTapDelay (ms)
+        <input type="number" id="opt-doubleTapDelay" value="300" min="0">
+      </label>
+
+      <label>ignore (selector)
+        <input type="text" id="opt-ignore" placeholder=".no-keyboard (leave blank to disable)" value=".no-keyboard">
+      </label>
+    </div>
+
+    <div class="grid">
+      <label>inputModeEnabled
+        <input type="text" id="opt-inputModeEnabled" value="text">
+      </label>
+
+      <label>inputModeDisabled
+        <input type="text" id="opt-inputModeDisabled" value="none">
+      </label>
+    </div>
+
+    <button id="btn-apply">Apply &amp; Reinitialize</button>
+    <p><small>Reinitializing calls <code>destroy()</code> on the previous instance first, then constructs a new one — so you can freely experiment with every combination.</small></p>
+  </section>
+
+  <!-- ───────────────────────── Public API ───────────────────────── -->
+  <section>
+    <h2>2. Public API</h2>
+    <p>These buttons call the controller's public methods directly on the live instance.</p>
+    <div class="grid">
+      <button id="btn-enable">enable()</button>
+      <button id="btn-disable" class="secondary">disable()</button>
+      <button id="btn-toggle" class="contrast">toggle()</button>
+      <button id="btn-refresh" class="outline">refresh()</button>
+    </div>
+    <div class="grid">
+      <label>setSelector(newSelector)
+        <input type="text" id="setselector-input" placeholder=".scan-input">
+      </label>
+      <label>&nbsp;
+        <button id="btn-setselector">Apply setSelector()</button>
+      </label>
+      <label>&nbsp;
+        <button id="btn-destroy" class="secondary outline">destroy()</button>
+      </label>
+    </div>
+    <p><code>keyboard.enabled</code> → <strong id="enabled-readout">false</strong></p>
+  </section>
+
+  <!-- ───────────────────────── Test inputs ───────────────────────── -->
+  <section>
+    <h2>3. Test inputs</h2>
+    <p>Each field shows its live <code>inputmode</code> attribute. Try double-clicking / double-tapping / clicking (depending on your chosen activation), then click elsewhere to see <code>deactivateOnBlur</code> in action.</p>
+
+    <label>Plain text input (matches default selector)
+      <input type="text" data-demo-input placeholder="Double-click me (or your chosen activation)">
+      <small class="mode-readout" data-mode-for></small>
+    </label>
+
+    <label>Search input (matches default selector)
+      <input type="search" data-demo-input placeholder="Search…">
+      <small class="mode-readout" data-mode-for></small>
+    </label>
+
+    <label>Textarea (matches default selector)
+      <textarea data-demo-input placeholder="Multi-line text…"></textarea>
+      <small class="mode-readout" data-mode-for></small>
+    </label>
+
+    <label>Numeric input with original inputmode="numeric" — tests <code>preserveInputMode</code>
+      <input type="text" inputmode="numeric" data-demo-input placeholder="1234">
+      <small class="mode-readout" data-mode-for></small>
+    </label>
+
+    <label>Ignored input — has class <code>no-keyboard</code>, matches the default <code>ignore</code> option
+      <input type="text" class="no-keyboard" data-demo-input placeholder="Always keeps native keyboard">
+      <small class="mode-readout" data-mode-for></small>
+    </label>
+
+    <label>Untargeted input — type="email" is outside the default selector entirely
+      <input type="email" data-demo-input placeholder="Never touched by the controller">
+      <small class="mode-readout" data-mode-for></small>
+    </label>
+  </section>
+
+  <!-- ───────────────────────── Dynamic inputs ───────────────────────── -->
+  <section>
+    <h2>4. Dynamic inputs</h2>
+    <p>Adds a brand-new <code>&lt;input&gt;</code> to the DOM and calls <code>refresh()</code>, exactly like the README's "Dynamic Inputs" example.</p>
+    <button id="btn-add-dynamic" class="outline">+ Add dynamic input &amp; refresh()</button>
+    <div id="dynamic-inputs-container"></div>
+  </section>
+
+  <!-- ───────────────────────── Ignore function demo ───────────────────────── -->
+  <section>
+    <h2>5. Function-based ignore</h2>
+    <p>Toggle this to swap the <code>ignore</code> option from a CSS selector to a function, matching the README's <code>ignore(element)</code> example (<code>element.dataset.keyboard === "false"</code>).</p>
+    <label>
+      <input type="checkbox" id="opt-ignore-fn" role="switch">
+      Use function-based ignore instead of the selector above (reinitializes automatically)
+    </label>
+    <label>Input with <code>data-keyboard="false"</code>
+      <input type="text" data-keyboard="false" data-demo-input placeholder="Ignored only when function-based ignore is active">
+      <small class="mode-readout" data-mode-for></small>
+    </label>
+  </section>
+
+  <!-- ───────────────────────── Activity log ───────────────────────── -->
+  <section>
+    <h2>6. Activity log</h2>
+    <p>Fires from the <code>onEnable</code> / <code>onDisable</code> callbacks and every API call you trigger above.</p>
+    <pre id="log"></pre>
+    <button id="btn-clear-log" class="outline secondary">Clear log</button>
+  </section>
+
+  <footer>
+    <p><small>This demo loads the library from <code>../dist/index.min.js</code> (UMD global build). Run <code>npm run build</code> first if that file doesn't exist yet.</small></p>
+  </footer>
+
+</main>
+
+<!-- Soft Keyboard Controller UMD build (global: SoftKeyboardController) -->
+<script type="module" src="./demo.js"></script>
 </body>
-
 </html>

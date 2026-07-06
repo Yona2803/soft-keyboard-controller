@@ -1,0 +1,71 @@
+/* Small overrides layered on top of Pico CSS */
+
+.pill {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: monospace;
+  margin-right: 0.5rem;
+}
+
+.pill-on {
+  background: #d7f5df;
+  color: #14532d;
+}
+
+.pill-off {
+  background: #fde2e2;
+  color: #7f1d1d;
+}
+
+.pill-neutral {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.mode-readout {
+  display: inline-block;
+  font-family: monospace;
+  color: var(--pico-muted-color);
+  margin-top: 0.15rem;
+}
+
+.mode-readout::before {
+  content: "inputmode: ";
+}
+
+.mode-readout.mode-none {
+  color: #b91c1c;
+}
+
+.mode-readout.mode-set {
+  color: #15803d;
+}
+
+#log {
+  background: #0f172a;
+  color: #d1fae5;
+  font-family: monospace;
+  font-size: 0.85rem;
+  padding: 1rem;
+  border-radius: var(--pico-border-radius);
+  max-height: 220px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+#dynamic-inputs-container label {
+  margin-top: 0.5rem;
+}
+
+section {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--pico-muted-border-color);
+}
+
+section:last-of-type {
+  border-bottom: none;
+}
