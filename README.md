@@ -419,10 +419,15 @@ Please open an issue before submitting major changes.
 # License
 
 MIT License
-![License](https://img.shields.io/npm/l/soft-keyboard-controller)
 
 ---
 
-# Author
+## 🍉 Solidarity & Action
 
-Created with ❤️ for warehouse, inventory, and enterprise web applications.
+If this project has helped you, please consider taking a moment to support the people of Gaza.
+
+- 🏥 [Medical Aid for Palestinians (MAP)](https://www.map.org.uk/)
+- 🍽️ [World Food Programme - Palestine](https://www.wfp.org/emergencies/palestine-emergency)
+- 📰 [Decolonize Palestine (Educational Resource)](https://decolonizepalestine.com)
+
+[![Stands with Palestine](https://img.shields.io/badge/Standswith-Palestine-brightgreen?style=flat-square&logo=appveyor&logoColor=white&labelColor=black&color=00b300)](https://decolonizepalestine.com)
